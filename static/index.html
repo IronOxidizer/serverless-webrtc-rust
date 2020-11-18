@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <link href=data:, rel=icon>
-<button onclick="sendOffer()">Send Connect Offer</button>
+<button id="connect" onclick="sendOffer()">Send Connect Offer</button>
 <br/>
 <input id="sendInput" disabled=true placeholder="Send Message"/>
 <button id="send" disabled=true onclick="dc.send(sendInput.value);sendInput.value=''">Submit</button>
@@ -26,6 +26,7 @@ var dc = pc.createDataChannel("webudp");
 dc.onopen = function(e) {
     alert("Connected");
     sendInput.disabled=send.disabled=false;
+    connect.disabled=true;
     console.log("Data channel connected:", e)
     dc.onmessage = function(e) {console.log("Message received: ", e.data);output.value+=e.data+"\n"};
 };

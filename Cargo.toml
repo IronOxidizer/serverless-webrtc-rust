@@ -1,5 +1,5 @@
 [package]
-name = "webrtc-serverless-rust"
+name = "serverless-webrtc-rust"
 version = "0.1.0"
 authors = ["Iron Oxidizer"]
 edition = "2018"

@@ -12,5 +12,5 @@ Built with:
 
 Notes:
 - WebRTC will not work with Firefox on 127.0.0.1
-- Kill with `killall -9 webrtc-serverless-rust`
+- Kill with `killall -9 serverless-webrtc-rust`
 - Removes STUN and TURN servers by sending SDP data directly to the WebRTC server via AJAX
