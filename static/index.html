@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<link href=data:, rel=icon>
+<button onclick="sendOffer()">Send Connect Offer</button>
+<br/>
+<input id="sendInput" disabled=true placeholder="Send Message"/>
+<button id="send" disabled=true onclick="dc.send(sendInput.value);sendInput.value=''">Submit</button>
+<br/>
+Server response:
+<br/>
+<textarea id="output" readonly></textarea>
+<script>
+"use strict";
+
+var pc = new RTCPeerConnection(null);
+pc.oniceconnectionstatechange = function(e) {console.log("Connection state changed: ", pc.iceConnectionState)};
+pc.onicecandidate = function(e) {
+    if (e.candidate) {
+        console.log("Received ice candidate: ", e.candidate);
+    } else {
+        console.log("All local candidates received");
+    }
+};
+
+var dc = pc.createDataChannel("webudp");
+dc.onopen = function(e) {
+    alert("Connected");
+    sendInput.disabled=send.disabled=false;
+    console.log("Data channel connected:", e)
+    dc.onmessage = function(e) {console.log("Message received: ", e.data);output.value+=e.data+"\n"};
+};
+dc.onerror = function(e) {
+    console.log("Data channel error:", e);
+};
+
+pc.createOffer().then(function(e) {pc.setLocalDescription(e)});
+
+function sendOffer() {
+    let r = new XMLHttpRequest();
+    r.open("POST", "/connect", true);
+    r.onreadystatechange = () => {
+        if (r.readyState != 4 || r.status != 200) return;
+        let response = JSON.parse(r.response);
+        console.log("Response received: ", response);
+        pc.setRemoteDescription(new RTCSessionDescription(response.answer)).then(function() {
+            var candidate = new RTCIceCandidate(response.candidate);
+            pc.addIceCandidate(candidate).then(function() {
+                console.log("Add ice candidate success");
+            }).catch(function(err) {
+                console.log("Error during 'addIceCandidate':", err);
+            });
+        }).catch(function(e) {
+            console.log("Error during 'setRemoteDescription':", e);
+        });
+    };
+    r.send(pc.localDescription.sdp);
+}
+</script>
