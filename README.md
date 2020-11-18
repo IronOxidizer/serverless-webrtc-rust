@@ -1,6 +1,6 @@
 # serverless-webrtc-rust
 
-Minimal Rust serverless WebRTC demo
+Minimal serverless Rust WebRTC demo
 
 ![image](https://user-images.githubusercontent.com/60191958/99572387-98cdd880-29a2-11eb-87cd-0f0e12d85642.png)
 
